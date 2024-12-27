@@ -1,9 +1,28 @@
 # Plant-seedling-classifcation
 
-This work concerns image classification. it's a kaggle competition https://www.kaggle.com/competitions/plant-seedlings-classification/overview.
+This work concerns image processing. I use multiple image processing techniques to segment and classify plant seed. I detail my approach here : "https://medium.com/@majdii.karim/plant-seedling-classification-project-ec22d59d09d2"
 
-Plant seedling classification is multiclass image problem. We have 12 different label or type of plant seedling. The aim is to find a model that classify plant seedlings accurately. 
-The notebook Plantseedling classification-colab shows the different steps that we proceeded with in order to come up with 3 differents models that I named : custom cnn model for raw data,custom cnn model for processed data, inception model. I saved all three of this models in google drive.
+Following are the steps to run the project on a local machine :
 
+- clone the repo.
 
-Next, the load_model.py script works as a sort of deployment. If we have a server which would host this script. All we would need to do is to mount google drive account locally on that server. The script will be able to load the models and make use of them to classify, also the image should also be loaded into the server.
+- create conda environement, I'm used python 3.12.8.
+
+- pip install -r requirements.txt
+
+- conda activate env
+
+- You shou start the localhost server on a choosen port (8000 for instance). The API will now be ready to receive and process image classification requests :
+
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+- send a post request to the local server. 
+
+curl -X POST "http://127.0.0.1:8000/predict/" -H "accept: application/json" -H "Content-Type: multipart/form-data" 
+-F "file=@pathtoimage"
+
+You must keep the @ in order to use cURL instead of the regular str path. This will allow to format the input into an instance object of the class File in the package Fastapi that specializes in aqcuiring files as inputs to the API. "@" should be followed by the absolute path.
+
+- Use the test.py script to test the API by sending a post request to your localhost server connected to the port 8000.
+
+python test.py
